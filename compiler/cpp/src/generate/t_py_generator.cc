@@ -352,7 +352,7 @@ void t_py_generator::init_generator() {
   f_types_ << py_autogen_comment() << endl << py_imports() << endl << render_includes() << endl
            << render_fastbinary_includes() << endl << endl;
 
-  f_consts_ << py_autogen_comment() << endl << py_imports() << endl << "from ttypes import *"
+  f_consts_ << py_autogen_comment() << endl << py_imports() << endl << "from .ttypes import *"
             << endl << endl;
 }
 
@@ -961,7 +961,7 @@ void t_py_generator::generate_service(t_service* tservice) {
   }
 
   f_service_ << "import logging" << endl
-             << "from ttypes import *" << endl
+             << "from .ttypes import *" << endl
              << "from thrift.Thrift import TProcessor" << endl
              << render_fastbinary_includes() << endl;
 
@@ -1410,7 +1410,11 @@ void t_py_generator::generate_service_remote(t_service* tservice) {
   f_remote.open(f_remote_name.c_str());
 
   f_remote << "#!/usr/bin/env python" << endl << py_autogen_comment() << endl << "import sys"
-           << endl << "import pprint" << endl << "from urlparse import urlparse" << endl
+           << endl << "import pprint" << endl
+           << "if sys.version_info[0] == 3:" << endl
+           << "  from urllib.parse import urlparse" << endl
+           << "else:" << endl
+           << "  from urlparse import urlparse" << endl
            << "from thrift.transport import TTransport" << endl
            << "from thrift.transport import TSocket" << endl
            << "from thrift.transport import TSSLSocket" << endl
