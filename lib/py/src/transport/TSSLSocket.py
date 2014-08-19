@@ -216,7 +216,7 @@ class TSSLServerSocket(TSocket.TServerSocket):
     except ssl.SSLError as ssl_exc:
       # failed handshake/ssl wrap, close socket to client
       plain_client.close()
-      # raise ssl_exc
+      # raise
       # We can't raise the exception, because it kills most TServer derived
       # serve() methods.
       # Instead, return None, and let the TServer instance deal with it in
