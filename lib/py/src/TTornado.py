@@ -24,7 +24,7 @@ import struct
 import logging
 logger = logging.getLogger(__name__)
 
-from .thrift.transport.TTransport import TTransportException, TTransportBase, TMemoryBuffer
+from .transport.TTransport import TTransportException, TTransportBase, TMemoryBuffer
 
 from io import BytesIO
 from collections import deque
