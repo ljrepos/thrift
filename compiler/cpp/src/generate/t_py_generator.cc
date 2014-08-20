@@ -760,7 +760,7 @@ void t_py_generator::generate_py_struct_definition(ofstream& out,
     // Printing utilities so that on the command line thrift
     // structs look pretty like dictionaries
     out << indent() << "def __repr__(self):" << endl << indent() << "  L = ['%s=%r' % (key, value)"
-        << endl << indent() << "    for key, value in self.__dict__.iteritems()]" << endl
+        << endl << indent() << "    for key, value in self.__dict__.items()]" << endl
         << indent() << "  return '%s(%s)' % (self.__class__.__name__, ', '.join(L))" << endl
         << endl;
 
@@ -1993,7 +1993,7 @@ void t_py_generator::generate_deserialize_container(ofstream& out, t_type* ttype
 
   // For loop iterates over elements
   string i = tmp("_i");
-  indent(out) << "for " << i << " in xrange(" << size << "):" << endl;
+  indent(out) << "for " << i << " in range(" << size << "):" << endl;
 
   indent_up();
 
