@@ -102,13 +102,13 @@ class TSSLSocket(TSocket.TSocket):
         self.handle.settimeout(self._timeout)
         try:
           self.handle.connect(ip_port)
-        except socket.error, e:
+        except socket.error as e:
           if res is not res0[-1]:
             continue
           else:
             raise e
         break
-    except socket.error, e:
+    except socket.error as e:
       if self._unix_socket:
         message = 'Could not connect to secure socket %s: %s' \
                 % (self._unix_socket, e)
@@ -213,10 +213,10 @@ class TSSLServerSocket(TSocket.TServerSocket):
       client = ssl.wrap_socket(plain_client, certfile=self.certfile,
                       server_side=True, ssl_version=self.SSL_VERSION,
                       ciphers=self.ciphers)
-    except ssl.SSLError, ssl_exc:
+    except ssl.SSLError:
       # failed handshake/ssl wrap, close socket to client
       plain_client.close()
-      # raise ssl_exc
+      # raise
       # We can't raise the exception, because it kills most TServer derived
       # serve() methods.
       # Instead, return None, and let the TServer instance deal with it in

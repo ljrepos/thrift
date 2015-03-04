@@ -341,7 +341,7 @@ void t_py_generator::init_generator() {
   f_types_ << py_autogen_comment() << endl << py_imports() << endl << render_includes() << endl
            << render_fastbinary_includes() << endl << endl;
 
-  f_consts_ << py_autogen_comment() << endl << py_imports() << endl << "from ttypes import *"
+  f_consts_ << py_autogen_comment() << endl << py_imports() << endl << "from .ttypes import *"
             << endl << endl;
 }
 
@@ -745,7 +745,7 @@ void t_py_generator::generate_py_struct_definition(ofstream& out,
     // Printing utilities so that on the command line thrift
     // structs look pretty like dictionaries
     out << indent() << "def __repr__(self):" << endl << indent() << "  L = ['%s=%r' % (key, value)"
-        << endl << indent() << "    for key, value in self.__dict__.iteritems()]" << endl
+        << endl << indent() << "    for key, value in self.__dict__.items()]" << endl
         << indent() << "  return '%s(%s)' % (self.__class__.__name__, ', '.join(L))" << endl
         << endl;
 
@@ -945,7 +945,7 @@ void t_py_generator::generate_service(t_service* tservice) {
                << tservice->get_extends()->get_name() << endl;
   }
 
-  f_service_ << "from ttypes import *" << endl << "from thrift.Thrift import TProcessor" << endl
+  f_service_ << "from .ttypes import *" << endl << "from thrift.Thrift import TProcessor" << endl
              << render_fastbinary_includes() << endl;
 
   if (gen_twisted_) {
@@ -1129,7 +1129,7 @@ void t_py_generator::generate_service_client(t_service* tservice) {
                << indent() << "    try:" << endl << indent()
                << "      frame = yield self._transport.readFrame()" << endl << indent()
                << "    except TTransport.TTransportException as e:" << endl << indent()
-               << "      for future in self._reqs.itervalues():" << endl << indent()
+               << "      for future in self._reqs.values():" << endl << indent()
                << "        future.set_exception(e)" << endl << indent() << "      self._reqs = {}"
                << endl << indent() << "      return" << endl << indent()
                << "    tr = TTransport.TMemoryBuffer(frame)" << endl << indent()
@@ -1393,7 +1393,9 @@ void t_py_generator::generate_service_remote(t_service* tservice) {
   f_remote.open(f_remote_name.c_str());
 
   f_remote << "#!/usr/bin/env python" << endl << py_autogen_comment() << endl << "import sys"
-           << endl << "import pprint" << endl << "from urlparse import urlparse" << endl
+           << endl << "import pprint" << endl << "if sys.version[0] == 3:" << endl 
+	   << "  from urllib.parse import urlparse" << endl << "else:" << endl
+	   << "  from urlparse import urlparse" << endl
            << "from thrift.transport import TTransport" << endl
            << "from thrift.transport import TSocket" << endl
            << "from thrift.transport import TSSLSocket" << endl
@@ -1701,7 +1703,7 @@ void t_py_generator::generate_process_function(t_service* tservice, t_function* 
       // Kinda absurd
       f_service_ << indent() << "  error.raiseException()" << endl;
       for (x_iter = xceptions.begin(); x_iter != xceptions.end(); ++x_iter) {
-        f_service_ << indent() << "except " << type_name((*x_iter)->get_type()) << ", "
+        f_service_ << indent() << "except " << type_name((*x_iter)->get_type()) << " as "
                    << (*x_iter)->get_name() << ":" << endl;
         if (!tfunction->is_oneway()) {
           indent_up();
@@ -1773,7 +1775,7 @@ void t_py_generator::generate_process_function(t_service* tservice, t_function* 
     if (!tfunction->is_oneway() && xceptions.size() > 0) {
       indent_down();
       for (x_iter = xceptions.begin(); x_iter != xceptions.end(); ++x_iter) {
-        f_service_ << indent() << "except " << type_name((*x_iter)->get_type()) << ", "
+        f_service_ << indent() << "except " << type_name((*x_iter)->get_type()) << " as "
                    << (*x_iter)->get_name() << ":" << endl;
         if (!tfunction->is_oneway()) {
           indent_up();
@@ -1828,7 +1830,7 @@ void t_py_generator::generate_process_function(t_service* tservice, t_function* 
     if (!tfunction->is_oneway() && xceptions.size() > 0) {
       indent_down();
       for (x_iter = xceptions.begin(); x_iter != xceptions.end(); ++x_iter) {
-        f_service_ << indent() << "except " << type_name((*x_iter)->get_type()) << ", "
+        f_service_ << indent() << "except " << type_name((*x_iter)->get_type()) << " as "
                    << (*x_iter)->get_name() << ":" << endl;
         if (!tfunction->is_oneway()) {
           indent_up();
@@ -1966,7 +1968,7 @@ void t_py_generator::generate_deserialize_container(ofstream& out, t_type* ttype
 
   // For loop iterates over elements
   string i = tmp("_i");
-  indent(out) << "for " << i << " in xrange(" << size << "):" << endl;
+  indent(out) << "for " << i << " in range(" << size << "):" << endl;
 
   indent_up();
 
