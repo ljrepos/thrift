@@ -104,7 +104,7 @@ class TestHandler:
 
   def testBinary(self, thing):
     if options.verbose > 1:
-      print 'testBinary()' # TODO: hex output
+      print('testBinary()') # TODO: hex output
     return thring
 	
   def testStruct(self, thing):
