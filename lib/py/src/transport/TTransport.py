@@ -18,7 +18,6 @@
 #
 
 from io import BytesIO
-from cStringIO import StringIO as BytesIO
 from struct import pack, unpack
 from thrift.Thrift import TException
 
@@ -84,7 +83,7 @@ class CReadableTransport:
   #       correctly for setting.
   @property
   def cstringio_buf(self):
-    """A cBytesIO buffer that contains the current chunk we are reading."""
+    """A BytesIO buffer that contains the current chunk we are reading."""
     pass
 
   def cstringio_refill(self, partialread, reqlen):
