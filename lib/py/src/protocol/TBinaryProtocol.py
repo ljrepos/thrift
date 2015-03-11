@@ -220,7 +220,12 @@ class TBinaryProtocol(TProtocolBase):
 
   def readString(self):
     len = self.readI32()
-    str = self.trans.readAll(len).decode('utf-8')
+    # Serialization chokes when either it is an actual string but there
+    # is no decode('utf-8') or it's binary data and there is a decode().
+    try:
+      str = self.trans.readAll(len).decode('utf-8')
+    except UnicodeDecodeError:
+      str = self.trans.readAll(len)
     return str
 
 
