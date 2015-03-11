@@ -119,9 +119,16 @@ class TBinaryProtocol(TProtocolBase):
     self.trans.write(buff)
 
   def writeString(self, str):
-    encoded = bytearray(str, 'utf-8')
-    self.writeI32(len(encoded))
-    self.trans.write(encoded)
+    # During serialization we need to be able to distinguish between
+    # UTF-8 encoded strings and binary data, hence the try/except. A
+    # stronger test would be to test for type `memoryview'.
+    try:
+      encoded = bytearray(str, 'utf-8')
+      self.writeI32(len(encoded))
+      self.trans.write(encoded)
+    except TypeError:
+      self.writeI32(len(str))
+      self.trans.write(str)
 
   def readMessageBegin(self):
     sz = self.readI32()
