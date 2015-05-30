@@ -213,7 +213,7 @@ class TSSLServerSocket(TSocket.TServerSocket):
       client = ssl.wrap_socket(plain_client, certfile=self.certfile,
                       server_side=True, ssl_version=self.SSL_VERSION,
                       ciphers=self.ciphers)
-    except ssl.SSLError:
+    except ssl.SSLError as ssl_exc:
       # failed handshake/ssl wrap, close socket to client
       plain_client.close()
       # raise

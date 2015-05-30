@@ -250,7 +250,7 @@ class TForkingServer(TServer):
             try:
               while True:
                 self.processor.process(iprot, oprot)
-            except TTransport.TTransportException:
+            except TTransport.TTransportException as tx:
               pass
             except Exception as e:
               logger.exception(e)
@@ -261,7 +261,7 @@ class TForkingServer(TServer):
 
           os._exit(ecode)
 
-      except TTransport.TTransportException:
+      except TTransport.TTransportException as tx:
         pass
       except Exception as x:
         logger.exception(x)
