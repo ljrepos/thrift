@@ -119,16 +119,13 @@ class TBinaryProtocol(TProtocolBase):
     self.trans.write(buff)
 
   def writeString(self, str):
-    # During serialization we need to be able to distinguish between
-    # UTF-8 encoded strings and binary data, hence the try/except. A
-    # stronger test would be to test for type `memoryview'.
-    try:
-      encoded = bytearray(str, 'utf-8')
-      self.writeI32(len(encoded))
-      self.trans.write(encoded)
+     try:
+      encoded = bytearray(s)  # py2
     except TypeError:
-      self.writeI32(len(str))
-      self.trans.write(str)
+      encoded = bytearray(s, 'utf-8')  # py3
+
+    self.writeI32(len(encoded))
+    self.trans.write(encoded)
 
   def readMessageBegin(self):
     sz = self.readI32()
@@ -226,14 +223,13 @@ class TBinaryProtocol(TProtocolBase):
     return val
 
   def readString(self):
-    len = self.readI32()
-    # Serialization chokes when either it is an actual string but there
-    # is no decode('utf-8') or it's binary data and there is a decode().
-    str = self.trans.readAll(len)
-    try:
-      return str.decode('utf-8')
-    except UnicodeDecodeError:
-      return str
+     _len = self.readI32()
+    s = self.trans.readAll(_len)
+
+    if isinstance(s, (bytes, bytearray)):
+      return s.decode('utf-8')  # py3
+    else:
+      return s  # py2
 
 class TBinaryProtocolFactory:
   def __init__(self, strictRead=False, strictWrite=True):
