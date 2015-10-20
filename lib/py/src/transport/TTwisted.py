@@ -48,9 +48,6 @@ class TMessageSenderTransport(TTransport.TTransportBase):
     def sendMessage(self, message):
         raise NotImplementedError
 
-    def sendMessage(self, message):
-        raise NotImplementedError
-
 
 class TCallbackTransport(TMessageSenderTransport):
 
