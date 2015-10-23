@@ -257,7 +257,10 @@ class TCompactProtocol(TProtocolBase):
     self.trans.write(pack('<d', dub))
 
   def __writeString(self, s):
-    b = s.encode('utf8')
+    try:
+      b = s.encode('utf8')
+    except AttributeError:
+      b = s
     self.__writeSize(len(b))
     self.trans.write(b)
   writeString = writer(__writeString)
@@ -392,8 +395,12 @@ class TCompactProtocol(TProtocolBase):
     return val
 
   def __readString(self):
-    len = self.__readSize()
-    return self.trans.readAll(len).decode('utf8')
+    _len = self.__readSize()
+    s = self.trans.readAll(_len)
+    try:
+      return s.decode('utf8')
+    except UnicodeDecodeError:
+      return s
   readString = reader(__readString)
 
   def __getTType(self, byte):
