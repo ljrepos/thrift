@@ -118,8 +118,8 @@ class TBinaryProtocol(TProtocolBase):
     buff = pack("!d", dub)
     self.trans.write(buff)
 
-  def writeString(self, str):
-     try:
+  def writeString(self, s):
+    try:
       encoded = bytearray(s)  # py2
     except TypeError:
       encoded = bytearray(s, 'utf-8')  # py3
@@ -223,13 +223,15 @@ class TBinaryProtocol(TProtocolBase):
     return val
 
   def readString(self):
-     _len = self.readI32()
+    _len = self.readI32()
     s = self.trans.readAll(_len)
+    # Serialization chokes when either it is an actual string but there
+    # is no decode('utf-8') or it's binary data and there is a decode().
+    try:
+      return s.decode('utf-8')
+    except UnicodeDecodeError:
+      return s
 
-    if isinstance(s, (bytes, bytearray)):
-      return s.decode('utf-8')  # py3
-    else:
-      return s  # py2
 
 class TBinaryProtocolFactory:
   def __init__(self, strictRead=False, strictWrite=True):
