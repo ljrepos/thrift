@@ -18,7 +18,12 @@
  */
 
 #include <Python.h>
-#include "cStringIO.h"
+// cStringIO removed in Python 3
+#if PY_MAJOR_VERSION == 3
+# define PyString_ PyUnicode_
+#else
+# include "cStringIO.h"
+#endif
 #include <stdint.h>
 #ifndef _WIN32
 # include <stdbool.h>
@@ -1215,8 +1220,39 @@ static PyMethodDef ThriftFastBinaryMethods[] = {
   {NULL, NULL, 0, NULL}        /* Sentinel */
 };
 
+#if PY_MAJOR_VERSION >= 3
+
+static int fastbinary_traverse(PyObject *m, visitproc visit, void *arg) {
+  //Py_VISIT(GETSTATE(m)->error);
+  return 0;
+}
+
+static int fastbinary_clear(PyObject *m) {
+  //Py_CLEAR(GETSTATE(m)->error);
+  return 0;
+}
+
+static struct PyModuleDef moduledef = {
+  PyModuleDef_HEAD_INIT,
+  "thrift.protocol.fastbinary",
+  NULL,
+  sizeof(struct module_state),
+  ThriftFastBinaryMethods,
+  NULL,
+  fastbinary_traverse,
+  fastbinary_clear,
+  NULL
+};
+#endif
+
+
 PyMODINIT_FUNC
+#if PY_MAJOR_VERSION >= 3
+PyInit_fastbinary(void) {
+#else
 initfastbinary(void) {
+#endif
+
 #define INIT_INTERN_STRING(value) \
   do { \
     INTERN_STRING(value) = PyString_InternFromString(#value); \
@@ -1227,8 +1263,14 @@ initfastbinary(void) {
   INIT_INTERN_STRING(cstringio_refill);
 #undef INIT_INTERN_STRING
 
+#if PY_MAJOR_VERSION >= 3
+  PyObject *module = PyModule_Create(&moduledef);
+  return module;
+
+#else
   PycString_IMPORT;
   if (PycStringIO == NULL) return;
 
   (void) Py_InitModule("thrift.protocol.fastbinary", ThriftFastBinaryMethods);
+#endif
 }
