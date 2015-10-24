@@ -22,7 +22,7 @@
 import sys, os, glob, time
 basepath = os.path.abspath(os.path.dirname(__file__))
 sys.path.insert(0, os.path.join(basepath, 'gen-py.twisted'))
-sys.path.insert(0, glob.glob(os.path.join(basepath, '../../lib/py/build/lib.*'))[0])
+sys.path.insert(0, glob.glob(os.path.join(basepath, '../../lib/py/build/lib*'))[0])
 
 from ThriftTest import ThriftTest
 from ThriftTest.ttypes import Xception, Xtruct
