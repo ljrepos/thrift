@@ -17,7 +17,13 @@
 # under the License.
 #
 
-from io import BytesIO
+# fastbinary.c uses PycStringIO_InputCheck() to check for cStringIO
+# specifically, so...
+import sys
+if sys.version_info[0] < 3:
+  from cStringIO import StringIO as BytesIO    # O_o
+else:
+  from io import BytesIO
 from struct import pack, unpack
 from thrift.Thrift import TException
 
@@ -76,14 +82,14 @@ class CReadableTransport:
   """base class for transports that are readable from C"""
 
   # TODO(dreiss): Think about changing this interface to allow us to use
-  #               a (Python, not c) BytesIO instead, because it allows
+  #               a (Python, not c) StringIO instead, because it allows
   #               you to write after reading.
 
   # NOTE: This is a classic class, so properties will NOT work
   #       correctly for setting.
   @property
   def cstringio_buf(self):
-    """A BytesIO buffer that contains the current chunk we are reading."""
+    """A StringIO buffer that contains the current chunk we are reading."""
     pass
 
   def cstringio_refill(self, partialread, reqlen):
@@ -163,7 +169,7 @@ class TBufferedTransport(TTransportBase, CReadableTransport):
       self.__wbuf.write(buf)
     except Exception as e:
       # on exception reset wbuf so it doesn't contain a partial function call
-      self.__wbuf = StringIO()
+      self.__wbuf = BytesIO()
       raise e
 
   def flush(self):
