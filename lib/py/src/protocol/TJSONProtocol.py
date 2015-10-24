@@ -183,13 +183,18 @@ class TJSONProtocolBase(TProtocolBase):
 
   def writeJSONString(self, string):
     self.context.write()
-    self.trans.write(json.dumps(string, ensure_ascii=False).encode('ascii'))
+    try:
+      s = string.decode('utf8')
+    except AttributeError:
+      s = string
+    self.trans.write(json.dumps(s, ensure_ascii=False).encode('ascii'))
 
   def writeJSONNumber(self, number, formatter='{}'):
     self.context.write()
-    jsNumber = str(formatter.format(number)).encode('ascii')
+    jsNumber = formatter.format(number).encode('ascii')
     if self.context.escapeNum():
-      jsNumber = "%s%s%s" % (QUOTE, jsNumber, QUOTE)
+      # The % operator is only re-introduced for bytes in Python 3.5
+      jsNumber = b"".join([QUOTE, jsNumber, QUOTE])
     self.trans.write(jsNumber)
 
   def writeJSONBase64(self, binary):
@@ -562,7 +567,7 @@ class TSimpleJSONProtocol(TJSONProtocolBase):
     def writeI64(self, i64):
         checkIntegerLimits(i64, 64)
         self.writeJSONNumber(i64)
-    
+
     def writeBool(self, boolean):
         self.writeJSONNumber(1 if boolean is True else 0)
 
