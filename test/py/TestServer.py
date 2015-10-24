@@ -53,7 +53,7 @@ parser.set_defaults(port=9090, verbose=1, proto='binary')
 options, args = parser.parse_args()
 
 script_dir = os.path.realpath(os.path.dirname(__file__))  # <-- absolute dir the script is in
-lib_dir = os.path.join(os.path.dirname(os.path.dirname(script_dir)), 'lib', 'py', 'build', 'lib.*')
+lib_dir = os.path.join(os.path.dirname(os.path.dirname(script_dir)), 'lib', 'py', 'build', 'lib*')
 
 sys.path.insert(0, os.path.join(script_dir, options.genpydir))
 sys.path.insert(0, glob.glob(lib_dir)[0])
@@ -80,19 +80,11 @@ PROT_FACTORIES = {
 class TestHandler(object):
   def testVoid(self):
     if options.verbose > 1:
-<<<<<<< HEAD
       logging.info('testVoid()')
 
   def testString(self, str):
     if options.verbose > 1:
       logging.info('testString(%s)' % str)
-=======
-      print('testVoid()')
-
-  def testString(self, str):
-    if options.verbose > 1:
-      print('testString(%s)' % str)
->>>>>>> cff89ccfcd2d2ae7cff72526b0cb8d687c5db10f
     return str
 
   def testBool(self, boolean):
@@ -102,52 +94,31 @@ class TestHandler(object):
 
   def testByte(self, byte):
     if options.verbose > 1:
-<<<<<<< HEAD
       logging.info('testByte(%d)' % byte)
-=======
-      print('testByte(%d)' % byte)
->>>>>>> cff89ccfcd2d2ae7cff72526b0cb8d687c5db10f
     return byte
 
   def testI16(self, i16):
     if options.verbose > 1:
-<<<<<<< HEAD
       logging.info('testI16(%d)' % i16)
-=======
-      print('testI16(%d)' % i16)
->>>>>>> cff89ccfcd2d2ae7cff72526b0cb8d687c5db10f
     return i16
 
   def testI32(self, i32):
     if options.verbose > 1:
-<<<<<<< HEAD
       logging.info('testI32(%d)' % i32)
-=======
-      print('testI32(%d)' % i32)
->>>>>>> cff89ccfcd2d2ae7cff72526b0cb8d687c5db10f
     return i32
 
   def testI64(self, i64):
     if options.verbose > 1:
-<<<<<<< HEAD
       logging.info('testI64(%d)' % i64)
-=======
-      print('testI64(%d)' % i64)
->>>>>>> cff89ccfcd2d2ae7cff72526b0cb8d687c5db10f
     return i64
 
   def testDouble(self, dub):
     if options.verbose > 1:
-<<<<<<< HEAD
       logging.info('testDouble(%f)' % dub)
-=======
-      print('testDouble(%f)' % dub)
->>>>>>> cff89ccfcd2d2ae7cff72526b0cb8d687c5db10f
     return dub
 
   def testBinary(self, thing):
     if options.verbose > 1:
-<<<<<<< HEAD
       logging.info('testBinary()')  # TODO: hex output
     return thing
 
@@ -159,19 +130,6 @@ class TestHandler(object):
   def testException(self, arg):
     # if options.verbose > 1:
     logging.info('testException(%s)' % arg)
-=======
-      print('testBinary()') # TODO: hex output
-    return thring
-	
-  def testStruct(self, thing):
-    if options.verbose > 1:
-      print('testStruct({%s, %d, %d, %d})' % (thing.string_thing, thing.byte_thing, thing.i32_thing, thing.i64_thing))
-    return thing
-
-  def testException(self, arg):
-    #if options.verbose > 1:
-    print('testException(%s)' % arg)
->>>>>>> cff89ccfcd2d2ae7cff72526b0cb8d687c5db10f
     if arg == 'Xception':
       raise Xception(errorCode=1001, message=arg)
     elif arg == 'TException':
@@ -179,11 +137,7 @@ class TestHandler(object):
 
   def testMultiException(self, arg0, arg1):
     if options.verbose > 1:
-<<<<<<< HEAD
       logging.info('testMultiException(%s, %s)' % (arg0, arg1))
-=======
-      print('testMultiException(%s, %s)' % (arg0, arg1))
->>>>>>> cff89ccfcd2d2ae7cff72526b0cb8d687c5db10f
     if arg0 == 'Xception':
       raise Xception(errorCode=1001, message='This is an Xception')
     elif arg0 == 'Xception2':
@@ -194,7 +148,6 @@ class TestHandler(object):
 
   def testOneway(self, seconds):
     if options.verbose > 1:
-<<<<<<< HEAD
       logging.info('testOneway(%d) => sleeping...' % seconds)
     time.sleep(seconds / 3)  # be quick
     if options.verbose > 1:
@@ -203,71 +156,40 @@ class TestHandler(object):
   def testNest(self, thing):
     if options.verbose > 1:
       logging.info('testNest(%s)' % thing)
-=======
-      print('testOneway(%d) => sleeping...' % seconds)
-    time.sleep(seconds / 3) # be quick
-    if options.verbose > 1:
-      print('done sleeping')
-
-  def testNest(self, thing):
-    if options.verbose > 1:
-      print('testNest(%s)' % thing)
->>>>>>> cff89ccfcd2d2ae7cff72526b0cb8d687c5db10f
     return thing
 
   def testMap(self, thing):
     if options.verbose > 1:
-<<<<<<< HEAD
       logging.info('testMap(%s)' % thing)
     return thing
 
   def testStringMap(self, thing):
     if options.verbose > 1:
       logging.info('testStringMap(%s)' % thing)
-=======
-      print('testMap(%s)' % thing)
->>>>>>> cff89ccfcd2d2ae7cff72526b0cb8d687c5db10f
     return thing
 
   def testSet(self, thing):
     if options.verbose > 1:
-<<<<<<< HEAD
       logging.info('testSet(%s)' % thing)
-=======
-      print('testSet(%s)' % thing)
->>>>>>> cff89ccfcd2d2ae7cff72526b0cb8d687c5db10f
     return thing
 
   def testList(self, thing):
     if options.verbose > 1:
-<<<<<<< HEAD
       logging.info('testList(%s)' % thing)
-=======
-      print('testList(%s)' % thing)
->>>>>>> cff89ccfcd2d2ae7cff72526b0cb8d687c5db10f
     return thing
 
   def testEnum(self, thing):
     if options.verbose > 1:
-<<<<<<< HEAD
       logging.info('testEnum(%s)' % thing)
-=======
-      print('testEnum(%s)' % thing)
->>>>>>> cff89ccfcd2d2ae7cff72526b0cb8d687c5db10f
     return thing
 
   def testTypedef(self, thing):
     if options.verbose > 1:
-<<<<<<< HEAD
       logging.info('testTypedef(%s)' % thing)
-=======
-      print('testTypedef(%s)' % thing)
->>>>>>> cff89ccfcd2d2ae7cff72526b0cb8d687c5db10f
     return thing
 
   def testMapMap(self, thing):
     if options.verbose > 1:
-<<<<<<< HEAD
       logging.info('testMapMap(%s)' % thing)
     return {
       -4: {
@@ -298,19 +220,6 @@ class TestHandler(object):
   def testMulti(self, arg0, arg1, arg2, arg3, arg4, arg5):
     if options.verbose > 1:
       logging.info('testMulti(%s)' % [arg0, arg1, arg2, arg3, arg4, arg5])
-=======
-      print('testMapMap(%s)' % thing)
-    return {thing: {thing: thing}}
-
-  def testInsanity(self, argument):
-    if options.verbose > 1:
-      print('testInsanity(%s)' % argument)
-    return {123489: {Numberz.ONE:argument}}
-
-  def testMulti(self, arg0, arg1, arg2, arg3, arg4, arg5):
-    if options.verbose > 1:
-      print('testMulti(%s)' % [arg0, arg1, arg2, arg3, arg4, arg5])
->>>>>>> cff89ccfcd2d2ae7cff72526b0cb8d687c5db10f
     return Xtruct(string_thing='Hello2',
                   byte_thing=arg0, i32_thing=arg1, i64_thing=arg2)
 
@@ -373,17 +282,10 @@ elif server_type == "TProcessPoolServer":
     def clean_shutdown(signum, frame):
       for worker in server.workers:
         if options.verbose > 0:
-<<<<<<< HEAD
           logging.info('Terminating worker: %s' % worker)
         worker.terminate()
       if options.verbose > 0:
         logging.info('Requesting server to stop()')
-=======
-          print('Terminating worker: %s' % worker)
-        worker.terminate()
-      if options.verbose > 0:
-        print('Requesting server to stop()')
->>>>>>> cff89ccfcd2d2ae7cff72526b0cb8d687c5db10f
       try:
         server.stop()
       except:
